@@ -475,7 +475,7 @@ def convertToPdf(text, filename):
 def ingest():
     # Initialize OpenAI and Pinecone
     openai.api_key = os.environ.get('OPENAI_API_KEY')
-    os.environ["PINECONE_API_KEY"] = '062dee78-2624-4ebf-a221-6da19d7e431e'
+    os.environ["PINECONE_API_KEY"] = ''
     os.environ["PINECONE_ENVIRONMENT"] = 'us-west1-gcp-free'
     os.environ["OPENAI_API_KEY"] = ''
     index_name = "askgit"
