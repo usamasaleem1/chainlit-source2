@@ -1,0 +1,3 @@
+[console_scripts]
+canopy=canopy_cli.cli:cli
+
