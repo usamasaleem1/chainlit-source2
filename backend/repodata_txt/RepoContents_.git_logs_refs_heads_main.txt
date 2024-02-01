@@ -1,0 +1,1 @@
+0000000000000000000000000000000000000000 95c7b24002fee1fbbbe07fc3693660234650f451 Usama Saleem <50121574+usamasaleem1@users.noreply.github.com> 1706801427 -0500	clone: from https://github.com/pinecone-io/canopy.git

@@ -1,0 +1,102 @@
+Metadata-Version: 2.1
+Name: turbopuffer
+Version: 0.1.6
+Summary: Python Client for accessing the turbopuffer API
+Home-page: https://turbopuffer.com
+License: MIT
+Keywords: turbopuffer,vector,database,cloud
+Author: turbopuffer Inc.
+Author-email: info@turbopuffer.com
+Maintainer: Jacob Wirth
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Database
+Classifier: Topic :: Database :: Front-Ends
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Typing :: Typed
+Provides-Extra: fast
+Requires-Dist: numpy (>=1.26.3,<2.0.0)
+Requires-Dist: orjson (>=3.9,<4.0) ; extra == "fast"
+Requires-Dist: pandas (>=2.1.4,<3.0.0)
+Requires-Dist: requests (>=2.31,<3.0)
+Project-URL: Documentation, https://turbopuffer.com/docs
+Project-URL: Repository, https://github.com/turbopuffer/turbopuffer-python
+Description-Content-Type: text/markdown
+
+![](https://github.com/turbopuffer/turbopuffer-python/assets/1594638/0482aa50-4665-4998-afd3-78afe56b52f3) turbopuffer Python Client [![CI Test](https://github.com/turbopuffer/turbopuffer-python/actions/workflows/ci_test.yml/badge.svg)](https://github.com/turbopuffer/turbopuffer-python/actions/workflows/ci_test.yml)
+=========================
+
+The official Python client for accessing the turbopuffer API.
+
+Usage
+-----
+
+1. Install the turbopuffer package and set your API key.
+```sh
+$ pip install turbopuffer
+```
+Or if you're able to run C binaries for JSON encoding, use:
+```sh
+$ pip install turbopuffer[fast]
+```
+
+2. Start using the API
+```py
+import turbopuffer as tpuf
+tpuf.api_key = 'your-token' # Alternatively: export=TURBOPUFFER_API_KEY=your-token
+
+# Open a namespace
+ns = tpuf.Namespace('hello_world')
+
+# Upsert your dataset
+ns.upsert(
+    ids=[1, 2],
+    vectors=[[0.1, 0.2], [0.3, 0.4]],
+    attributes={'name': ['foo', 'foos']}
+)
+
+# Alternatively, upsert using a row iterator
+ns.upsert(
+    {
+        'id': id,
+        'vector': [id/10, id/10],
+        'attributes': {'name': 'food'}
+    } for id in range(3, 10)
+)
+
+# Query your dataset
+vectors = ns.query(
+    vector=[0.15, 0.22],
+    distance_metric='cosine_distance',
+    top_k=10,
+    filters={ 'name': [['Glob', 'foo*'], ['NotEq', 'food']] },
+    include_attributes=['name'],
+    include_vectors=True
+)
+print(vectors)
+# [
+#   VectorRow(id=2, vector=[0.30000001192092896, 0.4000000059604645], attributes={'name': 'foos'}, dist=0.001016080379486084),
+#   VectorRow(id=1, vector=[0.10000000149011612, 0.20000000298023224], attributes={'name': 'foo'}, dist=0.009067952632904053)
+# ]
+```
+
+Endpoint Documentation
+----------------------
+
+For more details on request parameters and query options, check the docs at https://turbopuffer.com/docs
+

@@ -1,12 +1,7 @@
+
 import shutil
-import turbopuffer as tpuf
 import time
 from concurrent.futures import ThreadPoolExecutor
-import pinecone as pc
-import numpy as np
-from typing import List
-import uuid
-import base64
 import os
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,24 +9,18 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chat_models import ChatOpenAI
-import pinecone
 from pdfmerge import pdfmerge
 import textwrap
 from fpdf import FPDF
 from dotenv import load_dotenv
 from githubkit import GitHub, TokenAuthStrategy
-from dotenv import load_dotenv
 from langchain.embeddings.openai import OpenAIEmbeddings
-import requests
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 import sqlite3
 import re
-import os
-import requests
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import as_completed
 from glob import glob
-import itertools
 from openai import OpenAI
 from langchain.vectorstores import Weaviate
 from canopy.knowledge_base import KnowledgeBase
@@ -40,23 +29,12 @@ from canopy_cli.data_loader import load_from_path
 from canopy.tokenizer.tokenizer import Tokenizer
 from canopy.knowledge_base import list_canopy_indexes
 from canopy.knowledge_base.record_encoder.openai import OpenAIRecordEncoder
-import os
-import uuid
-import concurrent.futures
-import requests
-import numpy as np
-from typing import List
-from concurrent.futures import as_completed
-from dotenv import load_dotenv
-import os
-import glob
-import turbopuffer as tpuf
 from git import Repo
 import git
-import openai
 from shutil import rmtree
 from pathlib import Path
 from subprocess import run
+
 
 
 # Load environment variables from .env file
@@ -75,7 +53,7 @@ client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 # Modified download_directory function
 def clone_projects(project, branch):
     # Assume PATH is defined elsewhere or replace it with the desired path
-    Path = "/Users/usamasaleem/Dev Projects/Chainlit_qa/RepoContents/awaazo_awaazo"
+    Path = "/Users/usamasaleem/Dev Projects/chainlit-source2/backend/AwaazoRepoContents"
     git.Git(
         Path).clone("git://gitorous.org/git-python/mainline.git")
 
@@ -94,12 +72,12 @@ def download_directory():
     print(f"SUCCESS: Pulled {repo_url} to {target_path}")
 
     # delete data_backup folder if it exists
-    data_backup_path = "data_backup"
+    data_backup_path = "repodata_txt"
     if os.path.exists(data_backup_path):
         rmtree(data_backup_path)
 
     # for each file in RepoContents, copy it to data_backup if the file is readable as a text file, and convert it to a .txt file in the data_backup folder
-    for root, dirs, files in os.walk(target_path):
+    for root, path, files in os.walk(target_path):
         for file in files:
             file_path = os.path.join(root, file)
             if os.path.isfile(file_path):
@@ -149,92 +127,6 @@ def is_text_file(file_path):
 
 def execute(command):
     run(command, capture_output=True, shell=True, check=True, text=True)
-
-# old version of downloading repo contents
-# def download_directory(repo_owner, repo_name, target_path='RepoContents', branch='main', token=github_token):
-#     api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents"
-#     headers = {
-#         'Authorization': f'token {token}',
-#         'Accept': 'application/vnd.github.v3+json',
-#     }
-
-#     if len(os.listdir(target_path)) > 0:
-#         for file_name in os.listdir(target_path):
-#             file_path = os.path.join(target_path, file_name)
-#             if os.path.isfile(file_path):
-#                 os.remove(file_path)
-
-#     def download_contents(url, path=''):
-#         response = requests.get(url, headers=headers, params={'ref': branch})
-#         response.raise_for_status()
-#         contents = response.json()
-
-#         os.makedirs(target_path, exist_ok=True)
-
-#         for content in contents:
-#             if content['type'] == 'file':
-#                 # Ignore any images or gifs when downloading
-#                 if not content['path'].lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-#                     print(f"Downloading {content['path']}")
-#                     file_response = requests.get(
-#                         content['download_url'], headers=headers)
-#                     file_response.raise_for_status()
-
-#                     # Save the file content into a text file
-#                     file_path = os.path.join(
-#                         target_path, content['path'].replace('/', '_'))
-#                     with open(file_path, 'w', encoding='utf-8') as file:  # 'w' for text mode
-#                         # write the text content of the file
-#                         file.write(file_response.text)
-#             elif content['type'] == 'dir':
-#                 # Recursively call download_contents but do not change the target path
-#                 new_api_url = os.path.join(api_url, content['path'])
-#                 download_contents(
-#                     new_api_url, os.path.join(path, content['path']))
-
-#     # Start the recursive downloading
-#     download_contents(api_url)
-
-#     # Create data folder if it doesn't exist already
-#     if not os.path.exists('data'):
-#         os.makedirs('data')
-#     # if data folder is not empty, delete all files in it
-#     else:
-#         for file_name in os.listdir('data'):
-#             file_path = os.path.join('data', file_name)
-#             if os.path.isfile(file_path):
-#                 os.remove(file_path)
-
-#     repo_to_text(target_path, 'data')
-
-
-def repo_to_text(repo_path, output_path):
-    """
-    Converts files in a repository to text files and writes them to the given output directory.
-    After conversion, the original file is deleted.
-
-    :param repo_path: Path to the repository directory.
-    :param output_path: Path to the output directory where text files will be saved.
-    """
-    print("\nConverting repository files to text...")
-    for root, dirs, files in os.walk(repo_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.read()
-
-            text_file_name = os.path.splitext(file)[0] + '.txt'
-            safe_file_name = ''.join(
-                char for char in text_file_name if char.isalnum() or char in "._-")
-            output_file_path = os.path.join(output_path, safe_file_name)
-
-            with open(output_file_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-
-            # Delete the original file after conversion
-            os.remove(file_path)
-
-    print(f"SUCCESS: Converted repo contents to txt for ingestion")
 
 
 def get_issues_and_pulls():
@@ -469,8 +361,6 @@ def convertToPdf(text, filename):
     os.remove(metadata_file_path)
     # ingest()
 
-# Canopy version
-
 
 def ingest():
     # Initialize OpenAI and Pinecone
@@ -544,4 +434,4 @@ def deleteIndex():
 # deleteIndex()
 
 # only download repo contents:
-# download_directory()
+download_directory()

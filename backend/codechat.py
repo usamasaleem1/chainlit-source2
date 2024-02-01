@@ -8,11 +8,23 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 from langchain.docstore.document import Document
-import pinecone
+from pinecone import Pinecone
 import chainlit as cl
 from langchain.globals import set_llm_cache
 from langchain.cache import InMemoryCache
 from chainlit.input_widget import TextInput
+from chainlit.server import app
+from fastapi import Request
+from fastapi.responses import (
+    HTMLResponse,
+)
+
+
+@app.get("/hello")
+def hello(request: Request):
+    print(request.headers)
+    return HTMLResponse("Hello World")
+
 
 pinecone.init(
     api_key=os.environ.get("PINECONE_API_KEY"),

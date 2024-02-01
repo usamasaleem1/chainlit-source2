@@ -114,9 +114,7 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
           </div>
         );
       })}
-
-      <div>
-        <Box display="flex" alignItems="center">
+        <Box >
           <FormControl>
             <InputLabel id="random-options-label">Random Options</InputLabel>
             <Select
@@ -132,7 +130,6 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
             </Select>
           </FormControl>
         </Box>
-      </div>
     </Stack>
   );
 
