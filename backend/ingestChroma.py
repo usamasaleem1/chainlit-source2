@@ -6,7 +6,7 @@ from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 # Load and process the text files
 loader = DirectoryLoader('./repodata_txt', glob="./*.txt", loader_cls=TextLoader)
 # Supplying a persist_directory will store the embeddings on disk

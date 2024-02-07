@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 import chromadb
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 
 persist_directory = 'db'
 embedding = OpenAIEmbeddings(disallowed_special=())
