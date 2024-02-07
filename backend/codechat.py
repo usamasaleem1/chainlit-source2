@@ -13,20 +13,25 @@ import chainlit as cl
 from langchain.globals import set_llm_cache
 from langchain.cache import InMemoryCache
 from chainlit.input_widget import TextInput
-from chainlit.server import app
-from fastapi import Request
-from fastapi.responses import (
-    HTMLResponse,
-)
+
+from fastapi import FastAPI, HTTPException, Request, Form
+from fastapi.responses import HTMLResponse
+import subprocess
+
+app = FastAPI()
 
 
-@app.get("/hello")
-def hello(request: Request):
-    print(request.headers)
-    return HTMLResponse("Hello World")
+@app.post("/ingest/")
+async def ingest_repo(github_url: str = Form(...)):
+    try:
+        # Assuming ingest.py accepts a GitHub URL as a command-line argument
+        process = subprocess.run(['python', 'ingest.py', github_url], check=True, capture_output=True, text=True)
+        return {"message": "Ingestion successful", "output": process.stdout}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Ingestion failed: {e.stderr}")
 
 
-pinecone.init(
+Pinecone.init(
     api_key=os.environ.get("PINECONE_API_KEY"),
     environment=os.environ.get("PINECONE_ENV"),
 )
@@ -60,28 +65,6 @@ async def on_action(action: cl.Action):
 
 @cl.on_chat_start
 async def start():
-    # while True:
-    #     res = await cl.AskUserMessage(content="Hi! Please enter a GitHub Repo URL to get started. Example: http://github.com/author/repoName", timeout=30).send()
-    #     print(res["output"])
-    #     if res and res["output"].strip().startswith("https://github.com") or res["output"].strip().startswith("http://github.com") or res["output"].strip().startswith("github.com"):
-    #         break
-    #     else:
-    #         await cl.Message(
-    #             content="Please enter a valid GitHub Repo URL.",
-    #         ).send()
-    # actions = [
-    #     cl.Action(name="Process", value=str(res["output"]),
-    #               description="Ingest Repo"),
-    # ]
-
-    # repo_url = res["output"].strip(
-    #     "https://github.com").strip("http://github.com").strip("github.com").strip("/")
-
-    # repo_name = repo_url.split("/")[1]
-    # author = repo_url.split("/")[0]
-
-    # await cl.Message(content=f"You have entered {repo_name} by {author}.\nI need to quickly study the repo first, so this will take about a minute. Ready?", actions=actions).send()
-
     # await cl.Message(content=welcome_message).send()
     docsearch = Pinecone.from_existing_index(
         index_name=index_name, embedding=embeddings, namespace=namespace

@@ -13,7 +13,7 @@ from pdfmerge import pdfmerge
 import textwrap
 from fpdf import FPDF
 from dotenv import load_dotenv
-from githubkit import GitHub, TokenAuthStrategy
+
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
@@ -58,8 +58,11 @@ def clone_projects(project, branch):
         Path).clone("git://gitorous.org/git-python/mainline.git")
 
 
-def download_directory():
-    repo_url = input("Enter the repository url: ")
+def download_directory(github_url=None):
+    if github_url is None:
+        repo_url = input("Enter the repository url: ")
+    else:
+        repo_url = github_url
     repo_url = repo_url if repo_url.endswith('.git') else repo_url + '.git'
     target_path = "RepoContents"
     # delete RepoContents folder if it exists
@@ -434,4 +437,6 @@ def deleteIndex():
 # deleteIndex()
 
 # only download repo contents:
+# download_directory()
+
 download_directory()

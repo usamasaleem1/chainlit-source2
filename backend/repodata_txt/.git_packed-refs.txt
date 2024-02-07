@@ -1,0 +1,14 @@
+# pack-refs with: peeled fully-peeled sorted 
+289eef2a825e6df8fcda52463b847be0b6ce60b2 refs/remotes/origin/main
+fb990fa072739f3f7bb2f7f9c13188ada45800d2 refs/remotes/origin/todo-cleanup-v0.1
+ebc162343d2a0334d112ca1a973180eea41ea0a6 refs/remotes/origin/update_pytest-html
+b79e1400a3b342e6172c0755ee5651da64565898 refs/tags/V0.1.0
+b670e004f78956e92a7fbbe15e25cf4dc792b930 refs/tags/V0.1.1
+c7e7e5e7e7b6ecd59382bb5f7532e691dd4ce692 refs/tags/V0.1.2
+1f7033785ea409a561e6851d33ba36dfc26d0dc5 refs/tags/V0.1.3
+bf05ba3cb26cabce55ac489aeb951eb28ea39520 refs/tags/V0.1.4
+ed779fab84574837526b141c792176f8ef2408d0 refs/tags/V0.2.0
+3b546730b724d6f59ab1b4c5609923e679ee0063 refs/tags/V0.3.0
+230034b05eddbdc0d95ad5e85de7f8604540f87e refs/tags/V0.4.0a0
+82bbf9d231a0f9f839e64329a4c009077ad3a1f1 refs/tags/V0.5.0
+b506e45028d32f1cc8c89fe0768880c6cde17033 refs/tags/v0.6.0

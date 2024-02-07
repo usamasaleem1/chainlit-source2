@@ -1,33 +1,19 @@
+import React, { useState, useRef, memo } from 'react';
+import axios from 'axios';
 import { useAuth } from 'api/auth';
-import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-
+import { AppBar, Box, Button, IconButton, Menu, Stack, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import {
-  AppBar,
-  Box,
-  Button,
-  IconButton,
-  Menu,
-  Stack,
-  ToggleButton,
-  ToggleButtonGroup,
-  Toolbar
-} from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-
 import { RegularButton } from '@chainlit/react-components';
-
 import GithubButton from 'components/atoms/buttons/githubButton';
 import UserButton from 'components/atoms/buttons/userButton';
 import { Logo } from 'components/atoms/logo';
 import NewChatButton from 'components/molecules/newChatButton';
-
 import { IProjectSettings } from 'state/project';
-
 import { OpenThreadListButton } from './threadHistory/sidebar/OpenThreadListButton';
+
 
 interface INavItem {
   to: string;
@@ -41,6 +27,7 @@ function ActiveNavItem({ to, label }: INavItem) {
     </RegularButton>
   );
 }
+
 
 function NavItem({ to, label }: INavItem) {
   return (
@@ -114,22 +101,6 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
           </div>
         );
       })}
-        <Box >
-          <FormControl>
-            <InputLabel id="random-options-label">Random Options</InputLabel>
-            <Select
-              labelId="random-options-label"
-              id="random-options"
-              value={selectedOption}
-              // onChange={handleOptionChange}
-              sx={{ minWidth: '400px', borderRadius: '50px' }}
-            >
-              <MenuItem value="test1">test1</MenuItem>
-              <MenuItem value="test2">test2</MenuItem>
-              <MenuItem value="test3">test3</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
     </Stack>
   );
 
@@ -177,8 +148,24 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
   }
 };
 
-const Header = memo(
-  ({ projectSettings }: { projectSettings?: IProjectSettings }) => {
+const Header = memo(({ projectSettings }: { projectSettings?: IProjectSettings }) => {
+  const [githubUrl, setGithubUrl] = useState(''); // Correctly placed useState
+
+const handleIngest = async () => {
+  const formData = new FormData();
+  formData.append('github_url', githubUrl);
+
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/ingest/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response.data); // Handle success
+  } catch (error) {
+    console.error(error); // Handle error
+  }
+};
     const matches = useMediaQuery('(max-width: 66rem)');
 
     return (
@@ -201,6 +188,20 @@ const Header = memo(
               hasReadme={!!projectSettings?.markdown}
             />
           </Stack>
+          <input
+            type="text"
+            value={githubUrl}
+            onChange={(e) => setGithubUrl(e.target.value)}
+            placeholder="Enter GitHub URL"
+            style={{ marginRight: '8px', padding:"10px", width:"400px" }} // Simple styling, adjust as needed
+          />
+          {/* Button to trigger ingest */}
+          <span>
+          <Button variant="contained" color="primary" onClick={handleIngest}>
+            Ingest
+          </Button>
+
+          </span>
           <Stack
             alignItems="center"
             sx={{ ml: 'auto' }}
@@ -210,6 +211,7 @@ const Header = memo(
           >
             <NewChatButton />
             <Box ml={1} />
+
             <GithubButton href={projectSettings?.ui?.github} />
             <UserButton />
           </Stack>

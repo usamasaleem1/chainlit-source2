@@ -68,7 +68,7 @@ export default function Login() {
 
   return (
     <AuthLogin
-      title="Login to access the app."
+      title="Login to AskGit via Github."
       error={error}
       callbackUrl="/"
       providers={config?.oauthProviders || []}
@@ -76,7 +76,7 @@ export default function Login() {
       onOAuthSignIn={async (provider: string) => {
         window.location.href = apiClient.getOAuthEndpoint(provider);
       }}
-      renderLogo={<Logo style={{ maxWidth: '60%', maxHeight: '90px' }} />}
+
     />
   );
 }
