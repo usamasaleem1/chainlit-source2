@@ -62,3 +62,4 @@ dist-ssr
 backend/db
 
 backend/repodata_txt/*
+backend/RepoContents/*
