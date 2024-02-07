@@ -1,14 +1,31 @@
+from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+import chromadb
 import os
+import openai
+from dotenv import load_dotenv
+load_dotenv()
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.chains import RetrievalQA
-import chromadb
 
-os.environ["OPENAI_API_KEY"] = ""
+author_repoName = input("Enter the name of the existing collection (e.g., pinecone): ")
+
+if os.getenv("OPENAI_API_KEY") is not None:
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    print ("OPENAI_API_KEY is ready")
+else:
+    print ("OPENAI_API_KEY environment variable not found")
+
+EMBEDDING_MODEL = "text-embedding-3-small"
+client = chromadb.PersistentClient(path="db")
+print(client.list_collections())
+collection = client.get_collection(author_repoName)
+
+embedding_function = OpenAIEmbeddingFunction(api_key=os.environ.get('OPENAI_API_KEY'), model_name=EMBEDDING_MODEL)
 
 persist_directory = 'db'
 embedding = OpenAIEmbeddings(disallowed_special=())
-author_repoName = input("Enter the name of the existing collection (e.g., pinecone): ")
 
 # ------- Now we can use the vectordb to query the documents
 # load the persisted database from disk, and use it as normal. 

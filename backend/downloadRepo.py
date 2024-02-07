@@ -80,8 +80,3 @@ def is_text_file(file_path):
 
 download_directory()
 
-try:
-    shutil.rmtree("RepoContents")
-    print(f"SUCCESS: Deleted directory RepoContents")
-except Exception as e:
-    print(f"Error: {e}")

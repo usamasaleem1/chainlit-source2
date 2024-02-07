@@ -5,8 +5,16 @@ from langchain_openai import ChatOpenAI, OpenAI, OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
+from dotenv import load_dotenv
+load_dotenv()
+import openai
 
-os.environ["OPENAI_API_KEY"] = ""
+if os.getenv("OPENAI_API_KEY") is not None:
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    print ("OPENAI_API_KEY is ready")
+else:
+    print ("OPENAI_API_KEY environment variable not found")
+    
 # Load and process the text files
 loader = DirectoryLoader('./repodata_txt', glob="./*.txt", loader_cls=TextLoader)
 # Supplying a persist_directory will store the embeddings on disk
@@ -44,3 +52,4 @@ vectordb = None
 
 
 print("run chatChroma.py to query the database with questions")
+

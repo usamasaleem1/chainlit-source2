@@ -1,3 +1,0 @@
-289eef2a825e6df8fcda52463b847be0b6ce60b2		branch 'main' of https://github.com/pinecone-io/canopy
-fb990fa072739f3f7bb2f7f9c13188ada45800d2	not-for-merge	branch 'todo-cleanup-v0.1' of https://github.com/pinecone-io/canopy
-ebc162343d2a0334d112ca1a973180eea41ea0a6	not-for-merge	branch 'update_pytest-html' of https://github.com/pinecone-io/canopy
